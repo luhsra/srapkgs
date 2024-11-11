@@ -8,7 +8,8 @@
   in {
     packages = forAllSystems (system: rec {
       luadata = pkgs.${system}.python3Packages.callPackage ./pkgs/luadata.nix { };
-      versuchung = pkgs.${system}.python3Packages.callPackage ./dep/versuchung.nix { inherit luadata; };
+      versuchung = pkgs.${system}.python3Packages.callPackage ./pkgs/versuchung.nix { inherit luadata; };
+      sra-cli = pkgs.${system}.python3Packages.callPackage ./pkgs/sra-cli.nix { };
     });
   };
 }
