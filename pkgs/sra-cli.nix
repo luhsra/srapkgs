@@ -14,7 +14,11 @@ with python3Packages; buildPythonApplication {
     hash = "sha256-+4V2WJ0CHxWBK1qa98RdMuW4SFuRc4ZIfhz1sIg4NcA=";
   };
 
-  dependencies = [ pyyaml python-dateutil requests rauth fusepy python-gitlab
+  configurePhase = ''
+    sed -i /rauth/d pyproject.toml
+  '';
+
+  dependencies = [ pyyaml python-dateutil requests fusepy python-gitlab # rauth - deprecated
                    platformdirs ldap3 ];
 
   build-system = [ setuptools ];
