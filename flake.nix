@@ -11,5 +11,8 @@
       versuchung = pkgs.${system}.python3Packages.callPackage ./pkgs/versuchung.nix { inherit luadata; };
       sra-cli = pkgs.${system}.python3Packages.callPackage ./pkgs/sra-cli.nix { };
     });
+    devShells = forAllSystems (system: {
+      linux = import ./shells/linux.nix { pkgs = pkgs.${system}; };
+    });
   };
 }
