@@ -10,8 +10,8 @@ with python3Packages; buildPythonApplication {
 
   src = fetchgit {
     url = "https://scm.sra.uni-hannover.de/published/sra-cli.git";
-    rev = "a3b2a7876977d3c37a66efc8d693cf43fa99b5e5";
-    hash = "sha256-+4V2WJ0CHxWBK1qa98RdMuW4SFuRc4ZIfhz1sIg4NcA=";
+    rev = "a645f37b4527b2fde6134ac93072d6d5aa2424ea";
+    hash = "sha256-xnfVCH7aN+uzabwjauowFv1e6pcRmYlVUO3GAzCiUdQ=";
   };
 
   configurePhase = ''
