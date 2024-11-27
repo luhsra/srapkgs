@@ -6,16 +6,22 @@
   };
 
   outputs = { self, nixpkgs, ... }: let
-    supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
+    supportedSystems = [ "aarch64-linux" "x86_64-linux"
+                         "aarch64-darwin" "x86_64-darwin" ];
     forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-    pkgs = forAllSystems (system: nixpkgs.legacyPackages.${system});
-  in {
-    packages = forAllSystems (system: rec {
-      luadata = pkgs.${system}.python3Packages.callPackage ./pkgs/luadata.nix { };
-      versuchung = pkgs.${system}.python3Packages.callPackage ./pkgs/versuchung.nix { inherit luadata; };
-      sra-cli = pkgs.${system}.python3Packages.callPackage ./pkgs/sra-cli.nix { };
-      bib2json = pkgs.${system}.python3Packages.callPackage ./pkgs/bib2json.nix { };
+    pkgs = forAllSystems (system: import nixpkgs {
+      inherit system; overlays = [ self.overlays.default ];
     });
+  in {
+    packages = forAllSystems (system: {
+      inherit (pkgs.${system}) luadata versuchung sra-cli bib2json;
+    });
+    overlays.default = final: prev: rec {
+      luadata = final.python3Packages.callPackage ./pkgs/luadata.nix { };
+      versuchung = final.python3Packages.callPackage ./pkgs/versuchung.nix { inherit luadata; };
+      sra-cli = final.python3Packages.callPackage ./pkgs/sra-cli.nix { };
+      bib2json = final.python3Packages.callPackage ./pkgs/bib2json.nix { };
+    };
     devShells = forAllSystems (system: {
       linux = import ./shells/linux.nix { pkgs = pkgs.${system}; };
     });
