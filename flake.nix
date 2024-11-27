@@ -14,6 +14,7 @@
       luadata = pkgs.${system}.python3Packages.callPackage ./pkgs/luadata.nix { };
       versuchung = pkgs.${system}.python3Packages.callPackage ./pkgs/versuchung.nix { inherit luadata; };
       sra-cli = pkgs.${system}.python3Packages.callPackage ./pkgs/sra-cli.nix { };
+      bib2json = pkgs.${system}.python3Packages.callPackage ./pkgs/bib2json.nix { };
     });
     devShells = forAllSystems (system: {
       linux = import ./shells/linux.nix { pkgs = pkgs.${system}; };
