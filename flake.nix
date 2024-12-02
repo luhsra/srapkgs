@@ -26,5 +26,11 @@
       linux = import ./shells/linux.nix { pkgs = pkgs.${system}; };
       tex = import ./shells/tex.nix { pkgs = pkgs.${system}; };
     });
+    templates = nixpkgs.lib.attrsets.genAttrs [
+      "linux" "latex" "typst"
+    ] (name: {
+      path = ./templates/${name};
+      description = (import ./templates/${name}/flake.nix).description;
+    });
   };
 }
