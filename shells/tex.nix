@@ -6,5 +6,7 @@ pkgs.mkShellNoCC {
     gnumake
     poppler_utils
     pdftk
+    python3
+    git
   ];
 }
