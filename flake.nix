@@ -24,6 +24,7 @@
     };
     devShells = forAllSystems (system: {
       linux = import ./shells/linux.nix { pkgs = pkgs.${system}; };
+      tex = import ./shells/tex.nix { pkgs = pkgs.${system}; };
     });
   };
 }
