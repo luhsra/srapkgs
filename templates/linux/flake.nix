@@ -22,9 +22,10 @@
           qemu qemu_kvm qemu-utils
         ];
         inputsFrom = [ pkgs.linux ];
-        shellHook = ''
-          export LLVM=1
-        '';
+        hardeningDisable = [ "all" ];
+        env = {
+          LLVM = 1;
+        };
       };
     });
   };
