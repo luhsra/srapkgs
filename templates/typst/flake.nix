@@ -19,6 +19,11 @@
           tinymist
           typstyle
         ];
+        env = {
+          # Make loose fonts available here
+          # By default, this includes fonts contained in our texmf template
+          TYPST_FONT_PATHS = "texmf/fonts/opentype";
+        };
       };
     });
   };
