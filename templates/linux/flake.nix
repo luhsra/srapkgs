@@ -20,6 +20,7 @@
           ncurses
           pkg-config
           qemu qemu_kvm qemu-utils
+          guestfs-tools
         ];
         inputsFrom = [ pkgs.linux ];
         hardeningDisable = [ "all" ];
