@@ -28,7 +28,7 @@
       tex = import ./shells/tex.nix { pkgs = pkgs.${system}; };
     });
     templates = nixpkgs.lib.attrsets.genAttrs [
-      "linux" "latex" "typst"
+      "linux" "latex" "typst" "devshell"
     ] (name: {
       path = ./templates/${name};
       description = (import ./templates/${name}/flake.nix).description;
