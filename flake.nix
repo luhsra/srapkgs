@@ -14,9 +14,10 @@
     });
   in {
     packages = forAllSystems (system: {
-      inherit (pkgs.${system}) luadata versuchung sra-cli bib2json;
+      inherit (pkgs.${system}) luadata versuchung sra-cli bib2json font-rotis;
     });
     overlays.default = final: prev: rec {
+      font-rotis = final.callPackage ./pkgs/font-rotis.nix { };
       luadata = final.python3Packages.callPackage ./pkgs/luadata.nix { };
       versuchung = final.python3Packages.callPackage ./pkgs/versuchung.nix { inherit luadata; };
       sra-cli = final.python3Packages.callPackage ./pkgs/sra-cli.nix { };
