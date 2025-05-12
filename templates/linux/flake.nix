@@ -2,7 +2,7 @@
   description = "SRA flake for Linux kernel development";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/6915a163f351c32bd4557518d047725665e83d37";
   };
 
   outputs = { self, nixpkgs, ... }: let
