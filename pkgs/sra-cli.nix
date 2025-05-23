@@ -5,13 +5,13 @@
 
 with python3Packages; buildPythonApplication {
   pname = "sra-cli";
-  version = "2025.04.28-0";
+  version = "2025.04.28-1";
   pyproject = true;
 
   src = fetchgit {
     url = "https://scm.sra.uni-hannover.de/published/sra-cli.git";
-    rev = "96b1a60a1798bd8ea5f7d21b5d06dab5e4340f0c";
-    hash = "sha256-MifSMH+mFBM2yIStC8Ubbitz1yMwvPGJXdJ5P3IQL0I=";
+    rev = "f6d2805bb3a6b1bb35b2b72c3f593ff28b4ea87e";
+    hash = "sha256-rcw/G3RSY0yJOueSFpa2mMGfkBMBRfOcwYJ/blC2e+I=";
   };
 
   configurePhase = ''
@@ -19,7 +19,7 @@ with python3Packages; buildPythonApplication {
   '';
 
   dependencies = [ pyyaml python-dateutil requests fusepy python-gitlab # rauth - deprecated
-                   platformdirs ldap3 ];
+                   platformdirs ldap3 requests-oauthlib ];
 
   build-system = [ setuptools ];
 
