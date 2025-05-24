@@ -18,10 +18,10 @@
     });
     overlays.default = final: prev: rec {
       font-rotis = final.callPackage ./pkgs/font-rotis.nix { };
-      luadata = final.python3Packages.callPackage ./pkgs/luadata.nix { };
-      versuchung = final.python3Packages.callPackage ./pkgs/versuchung.nix { inherit luadata; };
-      sra-cli = final.python3Packages.callPackage ./pkgs/sra-cli.nix { };
-      bib2json = final.python3Packages.callPackage ./pkgs/bib2json.nix { };
+      luadata = final.callPackage ./pkgs/luadata.nix { };
+      versuchung = final.callPackage ./pkgs/versuchung.nix { inherit luadata; };
+      sra-cli = final.callPackage ./pkgs/sra-cli.nix { };
+      bib2json = final.callPackage ./pkgs/bib2json.nix { };
     };
     devShells = forAllSystems (system: {
       linux = import ./shells/linux.nix { pkgs = pkgs.${system}; };
