@@ -5,28 +5,29 @@
 
 with python3Packages; buildPythonApplication {
   pname = "sra-cli";
-  version = "2025.06.03-1";
+  version = "2025.06.03-2";
   pyproject = true;
 
   src = fetchgit {
     url = "https://scm.sra.uni-hannover.de/published/sra-cli.git";
-    rev = "2677e254e976ad83441c1c0501019a29152c6870";
-    hash = "sha256-nunn9f0JKFwoy23V803O0zF1c14tfrhzx9hiMUfFL5g=";
+    rev = "8090b4e0e5b087dc506091159477429bf97d2245";
+    hash = "sha256-GTMn36xN/Evjlvt5oeZhOIgMAdoIu+z0L+T80p9P3Fg=";
   };
 
-  configurePhase = ''
-    sed -i /rauth/d pyproject.toml
-  '';
-
-  dependencies = [ pyyaml python-dateutil requests fusepy python-gitlab # rauth - deprecated
-                   platformdirs ldap3 requests-oauthlib ];
+  # As in pyproject.toml
+  dependencies = [
+    pyyaml
+    python-dateutil
+    requests
+    requests-oauthlib
+    fusepy
+    python-gitlab
+    gitpython
+    platformdirs
+    ldap3
+  ];
 
   build-system = [ setuptools ];
 
   meta.mainProgram = "sra";
-
-  # Add runtime deps, if any
-  # makeWrapperArgs = ["--prefix PATH : ${
-  #   lib.makeBinPath [ ]
-  # }"];
 }
