@@ -10,8 +10,8 @@ with python3Packages; buildPythonApplication {
 
   src = fetchgit {
     url = "https://scm.sra.uni-hannover.de/published/sra-cli.git";
-    rev = "b3eb2ec1d24193131a7d4892d8a812a14b83dad4";
-    hash = "sha256-QqZoCjEWW9texmv+micGn27chzHjEMh5FRa+j3M0C50=";
+    rev = "dfff5f6a2e2352d2f4551cdf8138d4d46b990ed3";
+    hash = "sha256-OXAcsF/GTiBvVPhou4rk9IFqeH231ZcOKdHCgUIq7q0=";
   };
 
   # As in pyproject.toml
@@ -25,6 +25,7 @@ with python3Packages; buildPythonApplication {
     gitpython
     platformdirs
     ldap3
+    prettytable
   ];
 
   build-system = [ setuptools ];
