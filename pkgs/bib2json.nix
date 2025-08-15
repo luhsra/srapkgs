@@ -11,7 +11,7 @@ rustPlatform.buildRustPackage rec {
     hash = "sha256-mDfge40tR3/QOaWA/aaU2wPKvKA/BrTTCZj2EpEFDjU=";
   };
 
-  cargoHash = "sha256-Y5eqvsFicuiiGTjKBNwCLyPMITYGeNChwbCA90fJWvI=";
+  cargoHash = "sha256-V5zDeYdnAhaEHCXDgwjxzncDAo1p4XVjyzmisAdhwpY=";
 
   meta = {
     description = "Convert a BibTeX file to JSON (with Typst bibtexparser)";
