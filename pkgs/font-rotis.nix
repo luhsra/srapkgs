@@ -23,7 +23,7 @@ stdenvNoCC.mkDerivation rec {
   '';
 
   meta = with lib; {
-    description = " Hausschrift Rotis an der Leibniz Universität Hannover";
+    description = "Hausschrift Rotis an der Leibniz Universität Hannover";
     homepage = "https://www.luis.uni-hannover.de/de/services/betrieb-und-infrastruktur/arbeitsplatz-pc/apc-dienste/hausschrift-luh-rotis";
     platforms = platforms.all;
   };
