@@ -50,8 +50,8 @@ qemu-stock:
 ssh *args:
     {{ssh}} -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" -p{{ssh_port}} {{ssh_user}}@localhost "$@"
 
-qgdb:
-    {{gdb}} "{{kdir}}/vmlinux" -ex 'target remote :{{qgdb_port}}'
+qgdb *args:
+    {{gdb}} "{{kdir}}/vmlinux" -ex 'target remote :{{qgdb_port}}' "$@"
 
 qmp-shell *args:
     {{qmp-shell}} "$@" localhost:{{qmp_port}}
@@ -62,9 +62,9 @@ qmp-shell *args:
                          {"type":"qcode","data":"sysrq"},\
                          {"type":"qcode","data":"g"}]' | just qmp-shell
 
-kgdb:
+kgdb *args:
     @just kgdb-break || true
-    {{gdb}} "{{kdir}}/vmlinux" -ex 'target remote :{{kgdb_port}}'
+    {{gdb}} "{{kdir}}/vmlinux" -ex 'target remote :{{kgdb_port}}' "$@"
 
 gen-compile-commands:
     {{tree}}/scripts/clang-tools/gen_compile_commands.py -d "{{kdir}}" -o "{{tree}}/compile_commands.json"
