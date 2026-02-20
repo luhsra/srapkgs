@@ -29,10 +29,28 @@
       tex = import ./shells/tex.nix { pkgs = pkgs.${system}; };
     });
     templates = nixpkgs.lib.attrsets.genAttrs [
-      "linux" "latex" "typst" "devshell"
+      "latex" "typst" "devshell"
     ] (name: {
       path = ./templates/${name};
       description = (import ./templates/${name}/flake.nix).description;
-    });
+    }) // {
+      "linux" = {
+        path = ./templates/linux;
+        description = "Linux development environment and vm tooling";
+        welcomeText = ''
+          Adjust KBUILD\_INPUT and KBUILD\_OUTPUT in .envrc if needed!
+
+          Quickstart:
+
+          1. direnv allow .
+
+          2. just install-vmconfig
+
+          3. just make
+
+          4. just qemu
+        '';
+      };
+    };
   };
 }

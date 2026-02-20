@@ -1,0 +1,70 @@
+nix := require("nix")
+gdb := require("gdb")
+make := require("make")
+qmp-shell := require("qmp-shell")
+ssh := require("ssh")
+
+tree := env("KBUILD_INPUT")
+kdir := env("KBUILD_OUTPUT")
+
+# See linux/scripts/subarch.include
+arch := env("ARCH", shell("uname -m | sed -e s/i.86/x86/ -e s/x86_64/x86/ \
+                 -e s/sun4u/sparc64/ \
+                 -e /^arm64$$/!s/arm.*/arm/ -e s/sa110/arm/ \
+                 -e s/s390x/s390/ \
+                 -e s/ppc.*/powerpc/ -e s/mips.*/mips/ \
+                 -e s/sh[234].*/sh/ -e s/aarch64.*/arm64/ \
+                 -e s/riscv.*/riscv/ -e s/loongarch.*/loongarch/"))
+
+image := if arch == "x86" { "bzImage" } else { "Image" }
+serial := if arch == "x86" { "ttyS" } else { "ttyAMA" }
+
+qmp_port  := "5550"
+qgdb_port := "5551"
+kgdb_port := "5552"
+ssh_port  := "5553"
+
+export SHARED_DIR := env("SHARED_DIR", justfile_directory() + "/" + "shared")
+export QEMU_KERNEL_PARAMS := "nokaslr console="+serial+"0 kgdboc="+serial+"1 loglevel=7"
+export QEMU_OPTS := "-gdb tcp::"+qgdb_port+" \
+                     -qmp tcp:localhost:"+qmp_port+",server,wait=off \
+                     -serial mon:stdio \
+                     -serial telnet::"+kgdb_port+",server,nowait"
+export QEMU_NET_OPTS := "hostfwd=tcp::"+ssh_port+"-:22"
+
+
+help:
+    just -l
+
+make *args:
+    {{make}} -j$(nproc) -C {{tree}} {{args}}
+
+qemu:
+    {{nix}} run path:./nix -- --kernel "{{kdir}}/arch/{{arch}}/boot/{{image}}"
+
+qemu-stock:
+    {{nix}} run path:./nix
+
+ssh user="root" *args:
+    {{ssh}} -p{{ssh_port}} {{user}}@localhost {{args}}
+
+qgdb:
+    {{gdb}} "{{kdir}}/vmlinux" -ex 'target remote :{{qgdb_port}}'
+
+[confirm]
+@kgdb-break:
+    echo 'send-key keys=[{"type":"qcode","data":"alt"},\
+                         {"type":"qcode","data":"sysrq"},\
+                         {"type":"qcode","data":"g"}]' \
+        | {{qmp-shell}} localhost:{{qmp_port}}
+
+kgdb:
+    @just kgdb-break || true
+    {{gdb}} "{{kdir}}/vmlinux" -ex 'target remote :{{kgdb_port}}'
+
+gen-compile-commands:
+    {{tree}}/scripts/clang-tools/gen_compile_commands.py -d "{{kdir}}" -o "{{tree}}/compile_commands.json"
+
+install-vmconfig: && (make "olddefconfig")
+    mkdir -p {{kdir}}
+    cp configs/{{arch}}/vmconfig {{kdir}}/.config
