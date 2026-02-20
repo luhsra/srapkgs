@@ -23,6 +23,7 @@ qmp_port  := "5550"
 qgdb_port := "5551"
 kgdb_port := "5552"
 ssh_port  := "5553"
+ssh_user  := "root"
 
 export SHARED_DIR := env("SHARED_DIR", justfile_directory() + "/" + "shared")
 export QEMU_KERNEL_PARAMS := "nokaslr console="+serial+"0 kgdboc="+serial+"1 loglevel=7"
@@ -32,12 +33,13 @@ export QEMU_OPTS := "-gdb tcp::"+qgdb_port+" \
                      -serial telnet::"+kgdb_port+",server,nowait"
 export QEMU_NET_OPTS := "hostfwd=tcp::"+ssh_port+"-:22"
 
+set positional-arguments
 
 help:
     just -l
 
 make *args:
-    {{make}} -j$(nproc) -C {{tree}} {{args}}
+    {{make}} -j$(nproc) -C {{tree}} "$@"
 
 qemu:
     {{nix}} run path:./nix -- --kernel "{{kdir}}/arch/{{arch}}/boot/{{image}}"
@@ -45,8 +47,8 @@ qemu:
 qemu-stock:
     {{nix}} run path:./nix
 
-ssh user="root" *args:
-    {{ssh}} -p{{ssh_port}} {{user}}@localhost {{args}}
+ssh *args:
+    {{ssh}} -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" -p{{ssh_port}} {{ssh_user}}@localhost "$@"
 
 qgdb:
     {{gdb}} "{{kdir}}/vmlinux" -ex 'target remote :{{qgdb_port}}'

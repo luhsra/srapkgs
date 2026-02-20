@@ -3,7 +3,7 @@ let
   # This module describes the part of the system that only makes sense in our
   # test VM scenario, like empty root password and port forward rules.
   debugVm =
-    { modulesPath, ... }:
+    { config, modulesPath, ... }:
     {
       imports = [
         # The qemu-vm NixOS module gives us the `vm` attribute that we will later
@@ -56,13 +56,13 @@ let
 
       users.extraUsers.root = {
         password = "";
-        openssh.authorizedKeys.keys = [ ];
+        openssh.authorizedKeys.keys = pkgs.lib.strings.splitString "\n" (builtins.readFile ./authorized_keys);
       };
 
       users.extraUsers.eval = {
         isNormalUser = true;
         password = "";
-        openssh.authorizedKeys.keys = [ ];
+        openssh.authorizedKeys.keys = config.users.extraUsers.root.openssh.authorizedKeys.keys;
       };
 
       system.stateVersion = "24.11";
