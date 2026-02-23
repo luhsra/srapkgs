@@ -14,12 +14,18 @@
     });
   in {
     packages = forAllSystems (system: {
-      inherit (pkgs.${system}) luadata versuchung sra-cli bib2json font-rotis;
+      inherit (pkgs.${system}) sra-cli bib2json font-rotis;
     });
     overlays.default = final: prev: rec {
       font-rotis = final.callPackage ./pkgs/font-rotis.nix { };
-      luadata = final.callPackage ./pkgs/luadata.nix { };
-      versuchung = final.callPackage ./pkgs/versuchung.nix { inherit luadata; };
+      pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
+        (
+          python-final: python-prev: rec {
+            luadata = python-final.callPackage ./pkgs/luadata.nix { };
+            versuchung = python-final.callPackage ./pkgs/versuchung.nix { inherit luadata; };
+          }
+        )
+      ];
       sra-cli = final.callPackage ./pkgs/sra-cli.nix { };
       bib2json = final.callPackage ./pkgs/bib2json.nix { };
     };
