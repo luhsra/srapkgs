@@ -49,6 +49,7 @@
             "latex"
             "typst"
             "devshell"
+            "python-eval"
           ]
           (name: {
             path = ./templates/${name};
