@@ -38,11 +38,6 @@
         sra-cli = final.callPackage ./pkgs/sra-cli.nix { };
         bib2json = final.callPackage ./pkgs/bib2json.nix { };
       };
-      devShells = forAllSystems (system: {
-        linux = import ./shells/linux.nix { pkgs = pkgs.${system}; };
-        linux-llvm15 = import ./shells/linux-llvm15.nix { pkgs = pkgs.${system}; };
-        tex = import ./shells/tex.nix { pkgs = pkgs.${system}; };
-      });
       templates =
         nixpkgs.lib.attrsets.genAttrs
           [
