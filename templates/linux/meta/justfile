@@ -4,6 +4,8 @@ make := require("make")
 qmp-shell := require("qmp-shell")
 ssh := require("ssh")
 
+nproc := shell("nproc")
+
 tree := env("KBUILD_INPUT")
 kdir := env("KBUILD_OUTPUT")
 
@@ -39,7 +41,7 @@ help:
     just -l
 
 make *args:
-    {{make}} -j$(nproc) -C {{tree}} "$@"
+    {{make}} -j{{nproc}} -C {{tree}} "$@"
 
 qemu:
     {{nix}} run path:./nix -- --kernel "{{kdir}}/arch/{{arch}}/boot/{{image}}"
