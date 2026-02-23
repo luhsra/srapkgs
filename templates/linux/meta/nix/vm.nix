@@ -32,8 +32,9 @@ let
 
       virtualisation.graphics = false;
       boot.kernel.sysctl."kernel.sysrq" = 1;
-      # virtualisation.qemu.options = [ "-s" "-serial tcp::5555,server,nowait" ];
-      # boot.kernelParams = [ "console=ttyS0" "console=ttyS1" "kgdboc=ttyS1" ];
+
+      # virtualisation.qemu.options = [ ];
+      # boot.kernelParams = [ ];
 
       virtualisation = {
         memorySize = 8096;
@@ -54,16 +55,20 @@ let
         PermitEmptyPasswords = "yes";
       };
       security.pam.services.sshd.allowNullPassword = true;
+      security.pam.services.sudo.allowNullPassword = true;
 
-      users.extraUsers.root = {
-        password = "";
-        openssh.authorizedKeys.keys = pkgs.lib.strings.splitString "\n" (builtins.readFile ./authorized_keys);
-      };
+      users.users = {
+        root = {
+          password = "";
+          openssh.authorizedKeys.keys = pkgs.lib.strings.splitString "\n" (builtins.readFile ./authorized_keys);
+        };
 
-      users.extraUsers.eval = {
-        isNormalUser = true;
-        password = "";
-        openssh.authorizedKeys.keys = config.users.extraUsers.root.openssh.authorizedKeys.keys;
+        eval = {
+          isNormalUser = true;
+          password = "";
+          openssh.authorizedKeys.keys = config.users.extraUsers.root.openssh.authorizedKeys.keys;
+          extraGroups = [ "wheel" ];
+        };
       };
 
       system.stateVersion = "24.11";
