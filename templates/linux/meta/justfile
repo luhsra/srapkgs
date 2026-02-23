@@ -74,6 +74,12 @@ qemu-stock:
 ssh *args:
     {{ssh}} -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" "-p{{ssh_port}}" "{{ssh_user}}@localhost" "$@"
 
+# Load compiled module in the VM
+[no-cd]
+[group("Virtualization")]
+ssh-insmod name:
+    gzip -c "{{name}}" | just ssh 'f=$(mktemp); gzip -d > $f; rmmod {{name}}; insmod $f; rm -fv $f'
+
 # Send a QMP command to QEMU
 [group("Virtualization")]
 qmp-shell *args:
