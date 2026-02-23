@@ -39,47 +39,74 @@ export QEMU_NET_OPTS := "hostfwd=tcp::"+ssh_port+"-:22"
 
 set positional-arguments
 
+# List all possible commands
 help:
-    just -l
+    just -l --unsorted
 
+# Install a development-ready config suitable for booting in the VM
+[group("Building")]
+install-vmconfig: && (make "olddefconfig")
+    mkdir -p "{{kdir}}"
+    cp "configs/{{arch}}/vmconfig" "{{kdir}}/.config"
+
+# Run make in the kernel tree
+[group("Building")]
 make *args:
-    {{make}} -j{{nproc}} -C {{tree}} "$@"
+    {{make}} "-j{{nproc}}" -C "{{tree}}" "$@"
 
+# Generate compile commands in the kernel tree
+[group("Building")]
+gen-compile-commands:
+    {{tree}}/scripts/clang-tools/gen_compile_commands.py -d "{{kdir}}" -o "{{tree}}/compile_commands.json"
+
+# Start QEMU with the custom-built kernel
+[group("Virtualization")]
 qemu:
     {{nix}} run path:./nix -- --kernel "{{kdir}}/arch/{{arch}}/boot/{{image}}"
 
+# Start QEMU with the stock NixOS kernel
+[group("Virtualization")]
 qemu-stock:
     {{nix}} run path:./nix
 
+# SSH into the VM
+[group("Virtualization")]
 ssh *args:
-    {{ssh}} -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" -p{{ssh_port}} {{ssh_user}}@localhost "$@"
+    {{ssh}} -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" "-p{{ssh_port}}" "{{ssh_user}}@localhost" "$@"
 
+# Send a QMP command to QEMU
+[group("Virtualization")]
+qmp-shell *args:
+    {{qmp-shell}} -v "$@" "localhost:{{qmp_port}}"
+
+# Dump guest memory to a file (e.g., to analyze with drgn)
+[group("Virtualization")]
+[no-cd]
+qmp-dump file:
+    echo "dump-guest-memory paging=false protocol=file:$(realpath "{{file}}")" | just qmp-shell
+    chmod u+rw "{{file}}"
+
+# Connect GDB to QEMU's GDB stub
+[group("Debugging")]
 qgdb *args:
     {{gdb}} "{{kdir}}/vmlinux" -ex 'target remote :{{qgdb_port}}' "$@"
 
-qmp-shell *args:
-    {{qmp-shell}} "$@" localhost:{{qmp_port}}
-
-qmp-dump file=(justfile_directory()+"/kdump.elf"):
-    echo "dump-guest-memory paging=false protocol=file:{{file}}" | just qmp-shell
-    chmod u+rw "{{file}}"
-
+# Trigger a KGDB breakpoint in the VM
+[group("Debugging")]
 [confirm]
 @kgdb-break:
     echo 'send-key keys=[{"type":"qcode","data":"alt"},\
                          {"type":"qcode","data":"sysrq"},\
                          {"type":"qcode","data":"g"}]' | just qmp-shell
 
+# Connect GDB to KGDB
+[group("Debugging")]
 kgdb *args:
     @just kgdb-break || true
     {{gdb}} "{{kdir}}/vmlinux" -ex 'target remote :{{kgdb_port}}' "$@"
 
+# Start drgn with debugging symbols of the built kernel
+[group("Debugging")]
+[no-cd]
 drgn *args:
     {{drgn}} -s "{{kdir}}/vmlinux" "$@"
-
-gen-compile-commands:
-    {{tree}}/scripts/clang-tools/gen_compile_commands.py -d "{{kdir}}" -o "{{tree}}/compile_commands.json"
-
-install-vmconfig: && (make "olddefconfig")
-    mkdir -p {{kdir}}
-    cp configs/{{arch}}/vmconfig {{kdir}}/.config
