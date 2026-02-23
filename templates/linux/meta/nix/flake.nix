@@ -1,10 +1,14 @@
 {
-  inputs.nixpkgs.url = "nixpkgs/nixos-unstable";
+  inputs = {
+    nixpkgs.url = "nixpkgs/nixos-unstable";
+    srapkgs.url = "github:luhsra/srapkgs";
+  };
 
   outputs =
     {
       self,
       nixpkgs,
+      srapkgs,
     }:
     let
       lib = nixpkgs.lib;
@@ -47,7 +51,10 @@
           f {
             pkgs = import nixpkgs {
               inherit system;
-              overlays = [ fix-clang-wrappers ];
+              overlays = [
+                fix-clang-wrappers
+                srapkgs.overlays.default
+              ];
             };
           }
         );
@@ -81,6 +88,7 @@
             pkg-config
             just
             gdb
+            (python3.withPackages (pp: with pp; [ drgn ]))
           ];
         in
         {

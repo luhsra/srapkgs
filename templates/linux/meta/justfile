@@ -3,6 +3,7 @@ gdb := require("gdb")
 make := require("make")
 qmp-shell := require("qmp-shell")
 ssh := require("ssh")
+drgn := require("drgn")
 
 nproc := shell("nproc")
 
@@ -32,7 +33,8 @@ export QEMU_KERNEL_PARAMS := "nokaslr console="+serial+"0 kgdboc="+serial+"1 log
 export QEMU_OPTS := "-gdb tcp::"+qgdb_port+" \
                      -qmp tcp:localhost:"+qmp_port+",server,wait=off \
                      -serial mon:stdio \
-                     -serial telnet::"+kgdb_port+",server,nowait"
+                     -serial telnet::"+kgdb_port+",server,nowait \
+                     -device vmcoreinfo"
 export QEMU_NET_OPTS := "hostfwd=tcp::"+ssh_port+"-:22"
 
 set positional-arguments
@@ -58,6 +60,10 @@ qgdb *args:
 qmp-shell *args:
     {{qmp-shell}} "$@" localhost:{{qmp_port}}
 
+qmp-dump file=(justfile_directory()+"/kdump.elf"):
+    echo "dump-guest-memory paging=false protocol=file:{{file}}" | just qmp-shell
+    chmod u+rw "{{file}}"
+
 [confirm]
 @kgdb-break:
     echo 'send-key keys=[{"type":"qcode","data":"alt"},\
@@ -67,6 +73,9 @@ qmp-shell *args:
 kgdb *args:
     @just kgdb-break || true
     {{gdb}} "{{kdir}}/vmlinux" -ex 'target remote :{{kgdb_port}}' "$@"
+
+drgn *args:
+    {{drgn}} -s "{{kdir}}/vmlinux" "$@"
 
 gen-compile-commands:
     {{tree}}/scripts/clang-tools/gen_compile_commands.py -d "{{kdir}}" -o "{{tree}}/compile_commands.json"
