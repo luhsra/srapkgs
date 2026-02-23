@@ -33,6 +33,7 @@
           (python-final: python-prev: rec {
             luadata = python-final.callPackage ./pkgs/luadata.nix { };
             versuchung = python-final.callPackage ./pkgs/versuchung.nix { inherit luadata; };
+            drgn = python-final.callPackage ./pkgs/drgn.nix {};
           })
         ];
         sra-cli = final.callPackage ./pkgs/sra-cli.nix { };
