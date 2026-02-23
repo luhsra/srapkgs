@@ -53,6 +53,7 @@ let
         PermitRootLogin = "yes";
         PermitEmptyPasswords = "yes";
       };
+      security.pam.services.sshd.allowNullPassword = true;
 
       users.extraUsers.root = {
         password = "";
