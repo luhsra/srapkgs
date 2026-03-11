@@ -64,7 +64,9 @@
       packages = forEachSupportedSystem (
         { pkgs }:
         rec {
-          vm = pkgs.callPackage ./vm.nix { };
+          vm = (pkgs.nixos [
+            (import ./configuration.nix)
+          ]).config.system.build.vm;
           default = vm;
         }
       );
