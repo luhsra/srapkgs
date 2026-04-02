@@ -17,7 +17,7 @@
           git
           gnumake
           pandoc
-          poppler_utils
+          poppler-utils
           pdftk
           python3
           texlab
