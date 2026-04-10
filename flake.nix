@@ -52,6 +52,13 @@
             description = (import ./templates/${name}/flake.nix).description;
           })
         // {
+          "psra" = {
+            path = ./templates/psra;
+            description = (import ./templates/psra/flake.nix).description;
+            welcomeText = ''
+              Run `direnv allow .` to allow evaluation of the shell.
+            '';
+          };
           "linux" = {
             path = ./templates/linux;
             description = "Linux development environment and vm tooling";
