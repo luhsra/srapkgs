@@ -64,7 +64,7 @@
         { pkgs }:
         let
           # NOTE: Replace LLVM version here
-          llvm = pkgs.llvmPackages;
+          llvm = pkgs.llvmPackages_18;
           kernel_pkgs = with pkgs; [
             # Linux kernel extra stuff
             ccache
