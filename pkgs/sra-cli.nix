@@ -10,8 +10,8 @@ with python3Packages; buildPythonApplication {
 
   src = fetchgit {
     url = "https://scm.sra.uni-hannover.de/published/sra-cli.git";
-    rev = "8b310923efdc5c0f29fe9ba653b8241eaf4eaf7b";
-    hash = "sha256-vH8S12LZ5+YY6NFVkxetxx4KPqLsef6cTa/NKjQ0jpk=";
+    rev = "f1c6a80a4a56dc5f944d341a85c6ac01471633eb";
+    hash = "sha256-DHGq4hMnbn8YH590mhW+39YEdZdw6ifw5xXt4MjDNn4=";
   };
 
   # As in pyproject.toml
