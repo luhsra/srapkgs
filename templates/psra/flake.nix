@@ -77,6 +77,7 @@
             ncurses
             pkg-config
             gdb
+            git
           ];
         in
         {
