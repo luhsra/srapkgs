@@ -8,10 +8,10 @@ rustPlatform.buildRustPackage rec {
     owner = "luhsra";
     repo = pname;
     rev = version;
-    hash = "sha256-mDfge40tR3/QOaWA/aaU2wPKvKA/BrTTCZj2EpEFDjU=";
+    hash = "sha256-L7RDbdzhFBC5XetF1npnPaogfHaVDc251wHkbRgigyQ=";
   };
 
-  cargoHash = "sha256-V5zDeYdnAhaEHCXDgwjxzncDAo1p4XVjyzmisAdhwpY=";
+  cargoHash = "sha256-64yBOhvLJcA8qrQWwN1vdNEQgTj39GutA9OyAI8fZzE=";
 
   meta = {
     description = "Convert a BibTeX file to JSON (with Typst bibtexparser)";
