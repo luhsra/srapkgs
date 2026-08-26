@@ -2,7 +2,7 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "bib2json";
-  version = "0.1.2";
+  version = "0.1.3";
 
   src = fetchFromGitHub {
     owner = "luhsra";
