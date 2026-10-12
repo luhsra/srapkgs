@@ -5,13 +5,13 @@
 
 with python3Packages; buildPythonApplication {
   pname = "sra-cli";
-  version = "2025.08.15-1";
+  version = "2026.10.12";
   pyproject = true;
 
   src = fetchgit {
     url = "https://scm.sra.uni-hannover.de/published/sra-cli.git";
-    rev = "338a679117f9b05403d79dafe490f8fdde7e1ee9";
-    hash = "sha256-3SV078UASDYxyGYpTPTJw+e0QA29tN8x8/JatEheR54=";
+    rev = "d0c6527e73ec959c7ff31c147ee08ae55ad57b50";
+    hash = "sha256-vz/sqnrL7/RtscW8A96piLnztLr/w6QFlcukqpoKYxg=";
   };
 
   # As in pyproject.toml
